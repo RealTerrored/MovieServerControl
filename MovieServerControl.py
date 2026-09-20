@@ -11,7 +11,6 @@ import threading
 import json
 import signal
 
-GPIO.setmode(GPIO.BCM)
 #Variables=============================
 rs = 23
 e = 24
@@ -27,6 +26,10 @@ stop_event = threading.Event()
 data_lock = threading.Lock()
 hdd_data = {}
 #======================================
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(fan, GPIO.OUT)
+fan_pwm = GPIO.PWM(fan, 25000)  # 25 kHz
+fan_pwm.start(100)
 #Functions=============================
 def MakeLCDLine(left, right):
     return f"{left:<{16 - len(right)}}{right}"
@@ -137,12 +140,21 @@ def FanControl():
             device = drive["device"]
             TempList.append(get_smart_temperature(device))
         TempList.append(get_cpu_temperature())
-        print(TempList, flush=True)
-        print(drives, flush=True)
+        fanspeed = temp_to_percent(max(TempList), 30, 80, 30)
+        print(fanspeed)
+        fan_pwm.change_duty_cycle(fanspeed)
         stop_event.wait(5)
 def shutdown(signum, frame):
     print("Stopping...")
     stop_event.set()
+def temp_to_percent(current, min_temp, max_temp, min_threshold):
+    value = clamp(((current - min_temp) / (max_temp - min_temp) * 100), 0, 100)
+    if value < min_threshold:
+        return 0
+    else:
+        return value
+def clamp(value, minimum, maximum):
+    return max(minimum, min(value, maximum))
 #======================================
 if __name__ == "__main__":
 
