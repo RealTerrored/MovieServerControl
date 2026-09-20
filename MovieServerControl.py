@@ -1,4 +1,6 @@
 import os
+import warnings
+from os import wait
 
 from RPLCD.gpio import CharLCD
 import RPi.GPIO as GPIO
@@ -29,7 +31,6 @@ hdd_data = {}
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(fan, GPIO.OUT)
 fan_pwm = GPIO.PWM(fan, 25000)  # 25 kHz
-fan_pwm.start(100)
 #Functions=============================
 def MakeLCDLine(left, right):
     return f"{left:<{16 - len(right)}}{right}"
@@ -141,7 +142,7 @@ def FanControl():
             TempList.append(get_smart_temperature(device))
         TempList.append(get_cpu_temperature())
         fanspeed = temp_to_percent(max(TempList), 30, 80, 30)
-        print(fanspeed)
+        print(fanspeed, flush=True)
         fan_pwm.ChangeDutyCycle(fanspeed)
         stop_event.wait(5)
 def shutdown(signum, frame):
@@ -156,6 +157,10 @@ def temp_to_percent(current, min_temp, max_temp, min_threshold):
 def clamp(value, minimum, maximum):
     return max(minimum, min(value, maximum))
 #======================================
+fan_pwm.start(100)
+lcd.write_string("Server starting...")
+lcd.cursor_pos = (0, 0)
+time.sleep(5)
 if __name__ == "__main__":
 
 
