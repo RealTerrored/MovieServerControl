@@ -14,7 +14,7 @@ fan = 12
 lcd_columns = 16
 lcd_rows = 2
 
-lcd = LCD.Adafruit_CharLCD(rs, e, d4, d5, d6, d7, lcd_columns, lcd_rows)
+lcd = LCD.Adafruit_CharLCD(rs, e, d4, d5, d6, d7, lcd_columns, lcd_rows, gpio=GPIO)
 
 lcd.message("Works")
 time.sleep(5)
