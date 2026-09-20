@@ -137,8 +137,8 @@ def FanControl():
             device = drive["device"]
             TempList.append(get_smart_temperature(device))
         TempList.append(get_cpu_temperature())
-        print(TempList)
-        print(drives)
+        print(TempList, flush=True)
+        print(drives, flush=True)
         stop_event.wait(5)
 def shutdown(signum, frame):
     print("Stopping...")
