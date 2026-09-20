@@ -55,9 +55,9 @@ def UpdateLcd():
         JellyStatus = "OK" if GetJellyfinStatus() else "ERR"
         Line1 = MakeLCDLine(GetUptime(), JellyStatus)
         Line2 = f"  {GetIP()} "
-        CharLCD.write(Line1)
+        CharLCD.write_string(value=Line1)
         CharLCD.cursor_pos = (1, 0)
-        CharLCD.write(Line2)
+        CharLCD.write_string(value=Line2)
         CharLCD.cursor_pos = (0, 0)
         stop_event.wait(60)
 def get_smart_temperature(device):
@@ -157,6 +157,7 @@ def FanControl():
             TempList.append(get_smart_temperature(device))
         TempList.append(get_cpu_temperature())
         print(TempList)
+        print(drives)
         stop_event.wait(5)
 #======================================
 if __name__ == "__main__":
