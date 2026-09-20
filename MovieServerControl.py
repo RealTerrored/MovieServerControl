@@ -141,10 +141,10 @@ def FanControl():
             device = drive["device"]
             TempList.append(get_smart_temperature(device))
         TempList.append(get_cpu_temperature())
-        fanspeed = temp_to_percent(max(TempList), 0, 80, 30)
+        fanspeed = temp_to_percent(max(TempList), 30, 80, 30)
         print(str(fanspeed) + " " + str(max(TempList)), flush=True)
         fan_pwm.ChangeDutyCycle(fanspeed)
-        stop_event.wait(5)
+        stop_event.wait(120)
 def shutdown(signum, frame):
     print("Stopping...")
     stop_event.set()
@@ -161,6 +161,7 @@ fan_pwm.start(100)
 lcd.write_string("Server starting...")
 lcd.cursor_pos = (0, 0)
 time.sleep(5)
+lcd.clear()
 if __name__ == "__main__":
 
 
