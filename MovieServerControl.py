@@ -122,7 +122,7 @@ def get_physical_disks():
         # Only SATA disks
         if (
             disk["type"] == "disk"
-            and disk.get("tran") == "sata"
+            and disk.get("tran") == "sata" or "usb"
         ):
             drives.append({
                 "device": "/dev/" + disk["name"],
@@ -130,24 +130,6 @@ def get_physical_disks():
                 "size": disk.get("size")
             })
     return drives
-def hdd_monitor():
-    while not stop_event.is_set():
-        drives = get_physical_disks()
-        new_data = {}
-        for drive in drives:
-            device = drive["device"]
-            new_data[device] = {
-                "model": drive["model"],
-                "size": drive["size"],
-                "temperature":
-                    get_smart_temperature(device),
-            }
-        with data_lock:
-            hdd_data.clear()
-            hdd_data.update(new_data)
-
-
-        stop_event.wait(60)
 def FanControl():
     while not stop_event.is_set():
         drives = get_physical_disks()
