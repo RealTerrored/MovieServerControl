@@ -14,7 +14,7 @@ fan = 12
 lcd_columns = 16
 lcd_rows = 2
 
-lcd = CharLCD(numbering_mode=GPIO.BOARD, pin_rs=rs, pin_e=e, pins_data=[d4, d5, d6, d7], cols=lcd_columns, rows=lcd_rows)
+lcd = CharLCD(numbering_mode=GPIO.BCM, pin_rs=rs, pin_e=e, pins_data=[d4, d5, d6, d7], cols=lcd_columns, rows=lcd_rows)
 
 lcd.write_string("Works")
 lcd.cursor_pos = (1, 0)
