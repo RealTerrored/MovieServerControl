@@ -55,10 +55,10 @@ def UpdateLcd():
         JellyStatus = "OK" if GetJellyfinStatus() else "ERR"
         Line1 = MakeLCDLine(GetUptime(), JellyStatus)
         Line2 = f"  {GetIP()} "
-        CharLCD.write_string(value=Line1)
-        CharLCD.cursor_pos = (1, 0)
-        CharLCD.write_string(value=Line2)
-        CharLCD.cursor_pos = (0, 0)
+        lcd.write_string(value=Line1)
+        lcd.cursor_pos = (1, 0)
+        lcd.write_string(value=Line2)
+        lcd.cursor_pos = (0, 0)
         stop_event.wait(60)
 def get_smart_temperature(device):
     try:
