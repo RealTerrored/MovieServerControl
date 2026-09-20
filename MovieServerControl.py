@@ -141,8 +141,8 @@ def FanControl():
             device = drive["device"]
             TempList.append(get_smart_temperature(device))
         TempList.append(get_cpu_temperature())
-        fanspeed = temp_to_percent(max(TempList), 30, 80, 30)
-        print(fanspeed, flush=True)
+        fanspeed = temp_to_percent(max(TempList), 0, 80, 30)
+        print(str(fanspeed) + " " + str(max(TempList)), flush=True)
         fan_pwm.ChangeDutyCycle(fanspeed)
         stop_event.wait(5)
 def shutdown(signum, frame):
