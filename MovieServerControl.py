@@ -142,7 +142,7 @@ def FanControl():
         TempList.append(get_cpu_temperature())
         fanspeed = temp_to_percent(max(TempList), 30, 80, 30)
         print(fanspeed)
-        fan_pwm.change_duty_cycle(fanspeed)
+        fan_pwm.ChangeDutyCycle(fanspeed)
         stop_event.wait(5)
 def shutdown(signum, frame):
     print("Stopping...")
