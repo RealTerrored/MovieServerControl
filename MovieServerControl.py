@@ -119,15 +119,12 @@ def get_physical_disks():
     data = json.loads(result.stdout)
     drives = []
     for disk in data["blockdevices"]:
-        # Only SATA disks
-        if (
-            disk["type"] == "disk"
-            and disk.get("tran") == "sata" or "usb"
-        ):
+        if disk["type"] == "disk" and disk.get("tran") in ("usb", "sata"):
             drives.append({
                 "device": "/dev/" + disk["name"],
                 "model": disk.get("model"),
-                "size": disk.get("size")
+                "size": disk.get("size"),
+                "rotational": disk.get("rota")
             })
     return drives
 def FanControl():
@@ -168,12 +165,9 @@ if __name__ == "__main__":
 
 
     except KeyboardInterrupt:
-
         print("Stopping...")
-
         stop_event.set()
-
         for t in threads:
             t.join()
-
-GPIO.cleanup()
+        lcd.clear()
+        GPIO.cleanup()
