@@ -9,6 +9,7 @@ from datetime import timedelta
 import subprocess
 import threading
 import json
+import signal
 
 GPIO.setmode(GPIO.BCM)
 #Variables=============================
@@ -128,6 +129,7 @@ def get_physical_disks():
             })
     return drives
 def FanControl():
+    print("FanControl thread started", flush=True)
     while not stop_event.is_set():
         drives = get_physical_disks()
         TempList = []
@@ -138,6 +140,9 @@ def FanControl():
         print(TempList)
         print(drives)
         stop_event.wait(5)
+def shutdown(signum, frame):
+    print("Stopping...")
+    stop_event.set()
 #======================================
 if __name__ == "__main__":
 
@@ -153,21 +158,15 @@ if __name__ == "__main__":
         )
     ]
 
-
+    print("Starting threads...", flush=True)
     for t in threads:
         t.start()
 
+    signal.signal(signal.SIGTERM, shutdown)
+    signal.signal(signal.SIGINT, shutdown)
 
-    try:
-
-        while True:
-            time.sleep(1)
-
-
-    except KeyboardInterrupt:
-        print("Stopping...")
-        stop_event.set()
-        for t in threads:
-            t.join()
-        lcd.clear()
-        GPIO.cleanup()
+    stop_event.wait()
+    for t in threads:
+        t.join()
+    lcd.clear()
+    GPIO.cleanup()
