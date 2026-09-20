@@ -166,7 +166,7 @@ if __name__ == "__main__":
         threading.Thread(
             target=UpdateLcd,
             daemon=True
-        )
+        ),
         threading.Thread(
             target=FanControl,
             daemon=True
